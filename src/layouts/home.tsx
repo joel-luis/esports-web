@@ -5,10 +5,10 @@ import { ListGames } from '../services/listGames'
 
 import logo from '../assets/logo-nlw-esports.png'
 import { GameBanner } from '../components/GameBanner'
-import { CreateAdBanner } from '../components/CreateAdBanner'
 
 import '../styles/main.css'
 import { Error } from '../components/Error'
+import { Modal } from '../components/Modal'
 
 function Home() {
   const [games, setGames] = useState<Game[]>([])
@@ -34,7 +34,7 @@ function Home() {
   }
 
   return (
-    <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
+    <div className="max-w-[1344px] mx-auto flex flex-col items-center mt-20 px-4">
       <img src={logo} alt="Logo Nlw Esports" />
       <h1 className="text-6xl text-white font-black mt-20">
         Seu{' '}
@@ -53,7 +53,7 @@ function Home() {
           />
         ))}
       </div>
-      <CreateAdBanner />
+      <Modal />
     </div>
   )
 }
