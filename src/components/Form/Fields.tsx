@@ -1,15 +1,57 @@
+import { useCallback, useEffect, useState } from 'react'
+
 import * as Dialog from '@radix-ui/react-dialog'
-import { GameController } from 'phosphor-react'
+import * as Checkbox from '@radix-ui/react-checkbox'
+
+import { ListGames } from '../../services/listGames'
+import { Game } from '../../@types/listGames'
+
+import { Check, GameController } from 'phosphor-react'
 import { Input } from './Input'
+import { Error } from '../Error'
 
 export function Fields() {
+  const [games, setGames] = useState<Game[]>([])
+  const [error, setError] = useState(false)
+
+  const fecthGames = useCallback(async () => {
+    try {
+      const data = await ListGames()
+      if (data) {
+        setGames(data)
+      }
+    } catch (error) {
+      setError(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    fecthGames()
+  }, [])
+
+  if (error) {
+    return <Error />
+  }
+
   return (
     <form className="mt-8 flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <label className="font-semibold" htmlFor="game">
           Qual o game?
         </label>
-        <Input id="game" placeholder="Selecione o game que deseja jogar" />
+        <select
+          id="game"
+          className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none"
+        >
+          <option disabled selected value="">
+            Selecione o game que deseja jogar
+          </option>
+          {games.map((game) => (
+            <option key={game.id} value={game.id}>
+              {game.title}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="name">Seu nome (ou nickname)</label>
@@ -64,8 +106,12 @@ export function Fields() {
           </div>
         </div>
       </div>
-      <div className="mt-2 flex gap-2 text-sm">
-        <input type="checkbox" />
+      <div className="mt-2 flex items-center gap-2 text-sm">
+        <Checkbox.Root className="w-6 h-6 p-1 rounded bg-zinc-900">
+          <Checkbox.Indicator>
+            <Check className="w-4 h-4 text-emerald-400" />
+          </Checkbox.Indicator>
+        </Checkbox.Root>
         Costumo me conectar ao chat de voz
       </div>
       <footer className="mt-4 flex justify-end gap-4">
