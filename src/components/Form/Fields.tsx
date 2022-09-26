@@ -33,23 +33,24 @@ export function Fields() {
     fecthGames()
   }, [])
 
-  if (error) {
-    return <Error />
-  }
-
   async function handleCreateAd(event: FormEvent) {
     event.preventDefault()
     const formData = new FormData(event.target as HTMLFormElement)
     const data = Object.fromEntries(formData)
 
+    if (!data) {
+      return
+    }
+
     try {
       await CreateAd(data.game as string, {
         ...data,
         yearsPlaying: Number(data.yearsPlaying),
-        weekDays,
+        weekDays: weekDays.map(Number),
         useVoiceChannel
       })
     } catch (error) {
+      alert('Erro ao criar o anúncio!')
       console.log(error)
     }
   }
